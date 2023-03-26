@@ -1,45 +1,55 @@
-// 5.2 An Example Using Structs
+// 5.3 Method Syntax
 #[derive(Debug)]
 struct Rectangle {
     width: u32,
     height: u32,
 }
 
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+
+    fn width(&self) -> bool {
+        self.width > 0
+    }
+
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+
+// can have another impl block (no reason to do so but ok)
+impl Rectangle {
+    fn area_gt_100(&self) -> bool {
+        self.area() > 100
+    }
+}
+
 fn main() {
-    let width1 = 30;
-    let height1 = 50;
-    println!(
-        "Method1: The area of the rectangle is {} square pixels.",
-        area(width1, height1)
-    );
-
-    let rect2 = (30, 50);
-    println!(
-        "Method2: The area of the rectangle is {} square pixels.",
-        area2(rect2)
-    );
-
-    let rect3 = Rectangle {
+    let rect1 = Rectangle {
         width: 30,
         height: 50,
     };
-    println!(
-        "Method3: The area of the rectangle is {} square pixels.",
-        area3(&rect3)
-    );
-    println!("the rectangle is {:?}", rect3);
-    // debugging
-    dbg!(&rect3);
-}
+    println!("The area of rect1 is: {}", rect1.area());
 
-fn area(width: u32, height: u32) -> u32 {
-    width * height
-}
+    println!("The width is greater than 0: {}", rect1.width());
 
-fn area2(dimensions: (u32, u32)) -> u32 {
-    dimensions.0 * dimensions.1
-}
+    let rect2 = Rectangle {
+        width: 20,
+        height: 40,
+    };
+    println!("rect1 can hold rect2: {}", rect1.can_hold(&rect2));
 
-fn area3(rectangle: &Rectangle) -> u32 {
-    rectangle.width * rectangle.height
+    let square = Rectangle::square(10);
+    println!("rect1 can hold square: {}", rect1.can_hold(&square));
+
+    println!("square area is gt 100: {}", square.area_gt_100());
 }

@@ -1,55 +1,71 @@
-// 5.3 Method Syntax
-#[derive(Debug)]
-struct Rectangle {
-    width: u32,
-    height: u32,
+// 5.3 Defining an Enum
+
+enum IpAddrKind {
+    V4,
+    V6,
 }
 
-impl Rectangle {
-    fn area(&self) -> u32 {
-        self.width * self.height
-    }
+enum IpAddr2 {
+    V4(String),
+    V6(String),
+}
 
-    fn width(&self) -> bool {
-        self.width > 0
-    }
+enum Message {
+    Quit,
+    // can have named fields
+    Move { x: i32, y: i32 },
+    Write(String),
+    // or tuple-like fields
+    ChangeColor(i32, i32, i32),
+}
 
-    fn can_hold(&self, other: &Rectangle) -> bool {
-        self.width > other.width && self.height > other.height
-    }
-
-    fn square(size: u32) -> Self {
-        Self {
-            width: size,
-            height: size,
-        }
+impl Message {
+    fn call(&self) {
+        // method body would be defined here
     }
 }
 
-// can have another impl block (no reason to do so but ok)
-impl Rectangle {
-    fn area_gt_100(&self) -> bool {
-        self.area() > 100
-    }
+struct IpAddr {
+    kind: IpAddrKind,
+    address: String,
+}
+
+// very important concept!
+enum Option<T> {
+    None,
+    Some(T),
 }
 
 fn main() {
-    let rect1 = Rectangle {
-        width: 30,
-        height: 50,
+    // instantiate enum
+    let _four = IpAddrKind::V4;
+    let _six = IpAddrKind::V6;
+
+    // instantiate struct
+    let _home: IpAddr = IpAddr {
+        kind: IpAddrKind::V4,
+        address: String::from("127.0.0.1"),
     };
-    println!("The area of rect1 is: {}", rect1.area());
 
-    println!("The width is greater than 0: {}", rect1.width());
-
-    let rect2 = Rectangle {
-        width: 20,
-        height: 40,
+    // instantiate struct two
+    let _loopback: IpAddr = IpAddr {
+        kind: IpAddrKind::V6,
+        address: String::from("::1"),
     };
-    println!("rect1 can hold rect2: {}", rect1.can_hold(&rect2));
 
-    let square = Rectangle::square(10);
-    println!("rect1 can hold square: {}", rect1.can_hold(&square));
+    // instantiate struct three
+    let _home2 = IpAddr2::V4(String::from("127.0.0.1"));
+    let _loopback2 = IpAddr2::V6(String::from("::1"));
 
-    println!("square area is gt 100: {}", square.area_gt_100());
+    let m = Message::Write(String::from("hello"));
+    m.call();
+
+    // option example
+    let some_number = Some(5);
+    let some_char = Some('a');
+
+    let absent_number: Option<i32> = Option::None;
+
+    let num = some_number.unwrap();
+    println!("num + 5: {}", num + 5);
 }

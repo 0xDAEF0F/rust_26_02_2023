@@ -1,31 +1,34 @@
-// 6.2 The match control flow construct
+use std::option::Option;
+// 6.3 Concise Control Flow with if let
 
 // CHALLENGE
-// * construct a match statement
-// * extract value from the type of that match (try Option)
+// * Do an example of an if let, else situation
 fn main() {
-    let other_book = Book::Other;
-    let math_book_easy = Book::Math { iq: 100 };
-    let math_book_hard = Book::Math { iq: 150 };
+    let value_one = Some(100);
+    let value_two: Option<i32> = None;
 
-    let book_arr = [&other_book, &math_book_easy, &math_book_hard];
-
-    let mut i = 0;
-    while i < 3 {
-        let is_hard = is_book_too_hard(&book_arr[i]);
-        println!("book {i} is: {is_hard}");
-        i += 1;
+    if let Some(value) = value_one {
+        println!("the value is: {value}");
+    } else {
+        println!("this is a none")
     }
+
+    let digested_value_two = extract_value(value_two);
+    println!("value two's value is: {digested_value_two}");
+
+    let five = 5;
+    let ten = double(five);
+    println!("just doubled {} to {}", five, ten);
 }
 
-enum Book {
-    Math { iq: u8 },
-    Other,
+fn extract_value(val: Option<i32>) -> i32 {
+    if let Some(num) = val {
+        return num;
+    } else {
+        return 0;
+    };
 }
 
-fn is_book_too_hard(book: &Book) -> bool {
-    match book {
-        Book::Math { iq } => iq > &120,
-        _ => false,
-    }
+fn double(num: i32) -> i32 {
+    num * 2
 }

@@ -1,19 +1,33 @@
-// 7.1 Packages and Crates
+// 7.2 Defining Modules to Control Scope and Privacy
 
 // NOTES
-// * A crate is the **smallest** amount of code that the Rust compiler considers at a time.
-// * Crates *can* contain modules, and the modules *may* be defined in other files that get
-//   compiled with the crate.
-// * A crate can come in two forms:
-//   1. Library crate: don't have a `main` fn and don't compile to an executable,
-//      instead defined reusable functionality.
-//   2. Binary crate: programs you can compile to an executable that you can run.
-//      Each must have a function called `main`.
-// * The *crate root* is a source file that the Rust compiler starts from and makes up the
-//   root module of your crate.
-// * A *package* is a bundle of one or more crates that provides a set of functionality.
-//   They contain a `Cargo.toml` file that describes how to build those crates.
-// * If a package contains `src/main.rs` and `src/lib.rs` it has a binary and a library
-//   crate. Both packaged under the same name.
-// * A package can have multiple binary crates by placing files in the `src/bin` directory.
-fn main() {}
+// * `use` brings path into scope.
+// * `pub` make items public.
+// DECLARING MODULES
+// * `mod` to declare a module. The compiler will look for `mod garden;` in:
+//    * Inline, i.e., `mod garden {}`
+//    * `src/garden.rs`
+//    * `src/garden/mod.rs`
+// DECLARING SUBMODULES
+// * Declare any other file other than *crate root*.
+//   * ex: `mod vegetables;` in `src/garden.rs`
+//   * Inline, i.e., `mod vegetables {}`
+//   * `src/garden/vegetables/rs`
+//   * `src/garden/vegetables/mod.rs`
+// PATH TO CODE IN MODULES
+// * Once part of your crate, `Asparagus` -> `crate::garden::vegetables::Asparagus`
+// PRIVATE VS PUBLIC
+// * private by default.
+// * to make it public: `pub mod`.
+// THE `use` KEYWORD
+// * allows to reduce the repetition of long paths.
+
+// bring into scope (shorthand)
+use crate::garden::vegetables::Asparagus;
+
+// tell compiler to include `src/garden.rs`
+pub mod garden;
+fn main() {
+    let plant = Asparagus {};
+    println!("I'm growing {:?}!", plant);
+}

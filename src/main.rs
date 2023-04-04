@@ -1,33 +1,20 @@
-// 7.2 Defining Modules to Control Scope and Privacy
+// 7.3 Paths for Referring to an Item in the Module Tree
 
 // NOTES
-// * `use` brings path into scope.
-// * `pub` make items public.
-// DECLARING MODULES
-// * `mod` to declare a module. The compiler will look for `mod garden;` in:
-//    * Inline, i.e., `mod garden {}`
-//    * `src/garden.rs`
-//    * `src/garden/mod.rs`
-// DECLARING SUBMODULES
-// * Declare any other file other than *crate root*.
-//   * ex: `mod vegetables;` in `src/garden.rs`
-//   * Inline, i.e., `mod vegetables {}`
-//   * `src/garden/vegetables/rs`
-//   * `src/garden/vegetables/mod.rs`
-// PATH TO CODE IN MODULES
-// * Once part of your crate, `Asparagus` -> `crate::garden::vegetables::Asparagus`
-// PRIVATE VS PUBLIC
-// * private by default.
-// * to make it public: `pub mod`.
-// THE `use` KEYWORD
-// * allows to reduce the repetition of long paths.
+// * we use a path in the same way we use a path when navigating a filesystem.
+// * A path can take two forms:
+//      * Absolute path: starting from crate root (crate name) or `crate` if current crate.
+//      * Relative path: starts from current module. Uses `self`, `super, or an identifier in the current module.
+// * Both absolute and relative paths are separated by double colons `::`.
 
-// bring into scope (shorthand)
-use crate::garden::vegetables::Asparagus;
+// importing fn from lib
+use rust_book_exercises::eat_at_restaurant;
 
-// tell compiler to include `src/garden.rs`
-pub mod garden;
 fn main() {
-    let plant = Asparagus {};
-    println!("I'm growing {:?}!", plant);
+    eat_at_restaurant();
+
+    let _breakfast = rust_book_exercises::front_of_house::Breakfast {
+        toast: String::from("toast"),
+        seasonal_fruit: String::from("mango"),
+    };
 }

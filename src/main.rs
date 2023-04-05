@@ -1,20 +1,31 @@
-// 7.3 Paths for Referring to an Item in the Module Tree
+// 7.4 Bringing Paths into Scope with the `use` Keyword
 
 // NOTES
-// * we use a path in the same way we use a path when navigating a filesystem.
-// * A path can take two forms:
-//      * Absolute path: starting from crate root (crate name) or `crate` if current crate.
-//      * Relative path: starts from current module. Uses `self`, `super, or an identifier in the current module.
-// * Both absolute and relative paths are separated by double colons `::`.
-
-// importing fn from lib
-use rust_book_exercises::eat_at_restaurant;
+// * If there is a name collision with an item in scope
+//   you can use the `as` keyword to disambiguate the name.
+use rand::Rng;
+use rust_book_exercises::inc;
+use rust_book_exercises::module_a::EnumA;
+use rust_book_exercises::one;
+use std::collections::HashMap as MyHashMap;
+#[allow(unused_imports)]
+use std::{cmp::Ordering, io}; // can save up vertical space
+                              // use std::*; // can use glob operator to bring all into scope
 
 fn main() {
-    eat_at_restaurant();
+    let one: u32 = one();
+    let two: u32 = inc(one);
 
-    let _breakfast = rust_book_exercises::front_of_house::Breakfast {
-        toast: String::from("toast"),
-        seasonal_fruit: String::from("mango"),
-    };
+    println!("one: {one}, two: {two}");
+
+    // --
+    let _void: EnumA = EnumA::Void;
+    let _unit: EnumA = EnumA::Unit;
+
+    // --
+    let mut map: MyHashMap<u8, u8> = MyHashMap::new();
+    map.insert(0, 1);
+
+    // --
+    let _secret_number = rand::thread_rng().gen_range(1..=100);
 }

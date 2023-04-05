@@ -1,41 +1,33 @@
-pub mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
-    }
+use crate::module_a::EnumA;
+pub use crate::module_b::module_c::one; // re-exporting nested fn
 
-    pub fn cook_order() {
-        // super refers to parent module.
-        super::eat_at_restaurant();
+pub mod module_a {
+    pub enum EnumA {
+        Void,
+        Unit,
     }
+}
 
-    // Making struct public
-    #[derive(Debug)]
-    pub struct Breakfast {
-        pub toast: String,
-        // if you don't add to the field then you cannot access it directly.
-        pub seasonal_fruit: String,
-    }
-
-    impl Breakfast {
-        pub fn summer(toast: &str) -> Breakfast {
-            Breakfast {
-                toast: String::from(toast),
-                seasonal_fruit: String::from("peaches"),
-            }
+mod module_b {
+    pub mod module_c {
+        pub fn one() -> u32 {
+            1
         }
     }
 }
 
-pub fn eat_at_restaurant() {
-    // Absolute Path
-    crate::front_of_house::hosting::add_to_waitlist();
+pub fn inc(a: u32) -> u32 {
+    a + 1
+}
 
-    // Relative Path
-    front_of_house::hosting::add_to_waitlist();
+pub fn create_void() -> EnumA {
+    EnumA::Void
+}
 
-    front_of_house::cook_order();
+pub fn two() -> u32 {
+    // Option 1
+    // crate::module_b::module_c::one() + 1
 
-    let mut summer_breakfast = front_of_house::Breakfast::summer("toasty");
-    summer_breakfast.toast = String::from("Wheat");
-    println!("My breakfast: {:?}", summer_breakfast);
+    // Option 2
+    one() + 1
 }

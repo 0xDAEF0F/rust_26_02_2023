@@ -1,33 +1,16 @@
-use crate::module_a::EnumA;
-pub use crate::module_b::module_c::one; // re-exporting nested fn
+// specifying that we wan't to bring the module front_of_house.
+// it will look in a file with that name.
+mod front_of_house;
 
-pub mod module_a {
-    pub enum EnumA {
-        Void,
-        Unit,
-    }
-}
+// bring `add_to_waitlist` to namespace.
+use front_of_house::hosting::add_to_waitlist;
 
-mod module_b {
-    pub mod module_c {
-        pub fn one() -> u32 {
-            1
-        }
-    }
-}
+pub fn eat_at_restaurant() {
+    // option 1: provide absolute path
+    crate::front_of_house::hosting::add_to_waitlist();
 
-pub fn inc(a: u32) -> u32 {
-    a + 1
-}
+    // option 2: namespace option
+    add_to_waitlist();
 
-pub fn create_void() -> EnumA {
-    EnumA::Void
-}
-
-pub fn two() -> u32 {
-    // Option 1
-    // crate::module_b::module_c::one() + 1
-
-    // Option 2
-    one() + 1
+    let _two: u32 = front_of_house::hosting::inc(1);
 }

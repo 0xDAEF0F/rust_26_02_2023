@@ -1,55 +1,75 @@
-// 8.2 Storing UTF-8 Encoded Text with Strings
+// 8.3 Storing Keys with Associated Values in Hash Maps
+
+use std::collections::HashMap;
 
 // Notes:
-// * Discuss strings in the context of collections of bytes
-// * `String` is a growable, mutable, owned, UTF-8 encoded string type.
-// * Both `String` and string slices are UTF-8 encoded.
-// * Strings are implemented as a wrapper around a vector of bytes with
-//   extra guarantees, restrictions, and capabilities.
-// * `to_string` method is available on any type that implements the `Display` trait.
+// * Useful to look up data by key
+// * Store their data on the heap (like Vectors)
+// * Keys *and* values must have the same type
+// * We can insert references to a hashmap but the values that the ref point to must be valid
+//   for at least as long as the hash map is valid.
+// * Each key can *only* have one value associated at a time.
+// * Iterating over a hash map happens in arbitrary order.
+// * `SipHash` used as hashing algorithm.
 fn main() {
-    // 1. Creating a String
-    let _s0: String = "initial contents".to_string();
-    let _s1: String = String::from("initial contents");
+    let mut scores = HashMap::new();
 
-    // 2. Updating a String
-    let mut _s2: String = "foo".to_string();
-    // push_str does not take ownership of it's argument
-    _s2.push_str("bar");
-    // `push` takes a single char and adds to the String
-    _s2.push('!'); // => foobar!
+    scores.insert("Blue".to_string(), 10);
+    scores.insert("Yellow".to_string(), 50);
 
-    // 3. Concatenation with the `+` Operator or the `format!` macro
-    let _s3 = String::from("Hello, ");
-    let _s4 = "world!".to_string();
-    let _s5 = _s3 + &_s4; // s3 has moved to s5 and can't be used further
-                          // `fn add(self, s: &str) -> String`
-                          // &String can be coerced into &str
-    let _s6 = String::from("tic");
-    let _s7 = String::from("tac");
-    let _s8 = String::from("toe");
-    // this does not take ownership of any of the values and returns a String with the contents.
-    let _s9 = format!("{_s6}-{_s7}-{_s8}");
+    // copied copies the Option value and unwrap just unwraps the option and if none sets to 0
+    let score = scores.get(&String::from("Blue")).copied().unwrap_or(0);
 
-    // 4. Indexing into Strings
-    // this code will not compile. you can't access individual chars by referencing by index
-    // let s1 = String::from("hello");
-    // let h = s1[0];
+    // iterate over each k/v pair
+    for (k, v) in &scores {}
 
-    // 5. Internal Representation
-    // * The reason that you can't access `&str[i]` directly is because of the fact
-    //   that some UTF-8 chars are more than **one byte** in size.
-    // * Three ways to look at strings from Rust's perspective: bytes, scalar values, and grapheme clusters.
-    // * You can do instead: `&str[n..m]` to be more specific.
+    // 2. Hash Maps and Ownership
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
 
-    // 6. Methods for Iterating Over Strings
-    let weird_string = "Зд".to_string();
-    // Option A
-    for c in weird_string.chars() {}
-    // Option B
-    for b in weird_string.bytes() {}
-    // Remember: valid unicode scalar values may be more than 1 byte
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    // can no longer use `field_name` or `field_value` because ownership moved to the map
 
-    // 7. Summary
-    // * `contains` and `replace` check it out.
+    // 3. Overwriting a value
+    overwriting_a_value();
+
+    // 4. Adding a Key and Value Only if a Key Isn't Present
+    writing_only_if_non_existent_key();
+
+    // 5. Updating a Value Based on the Old Value
+    updating_based_old_value();
+}
+
+fn overwriting_a_value() {
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Blue"), 25);
+    println!("{:?}", scores);
+}
+
+fn writing_only_if_non_existent_key() {
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+
+    let ent = scores.entry(String::from("Yellow")).or_insert(50);
+    *ent += 1;
+    let ent2 = scores.entry(String::from("Blue")).or_insert(50);
+    *ent2 += 1;
+
+    println!("{:?}", scores);
+}
+
+fn updating_based_old_value() {
+    let text = "hello world wonderful world";
+
+    let mut map = HashMap::new();
+
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+    }
+
+    println!("{:?}", map);
 }
